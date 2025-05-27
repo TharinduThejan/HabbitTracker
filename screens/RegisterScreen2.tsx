@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { storeUser } from '../storage/userStorage';
 import { User } from '../types/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CommonActions } from '@react-navigation/native';
 
 
 export default function RegisterScreen() {
@@ -21,7 +22,12 @@ export default function RegisterScreen() {
                 const savedData = await AsyncStorage.getItem('user');
                 console.log('Data in AsyncStorage:', savedData);
                 console.log('User saved:', user);
-                navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+                navigation.dispatch(
+                    CommonActions.reset({
+                        index: 0,
+                        routes: [{ name: 'Home' }],
+                    })
+                );
             } catch (error) {
                 Alert.alert('Registration error', 'An error occurred during registration.');
             }

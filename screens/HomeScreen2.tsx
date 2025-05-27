@@ -11,7 +11,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { getHabits, saveHabits } from '../services/habitService';
 import { Habit } from '../types/types';
-export default function HomeScreen() {
+export default function HomeScreen({ setIsLoggedIn }: { setIsLoggedIn: (value: boolean) => void }) {
     const navigation: any = useNavigation();
     const [habits, setHabits] = useState<Habit[]>([]);
 
@@ -26,7 +26,7 @@ export default function HomeScreen() {
     }, [navigation]);
 
     const handleLogout = async () => {
-        navigation.navigate('Login'); // Simple navigation instead of reset
+        setIsLoggedIn(false);
     };
 
 
