@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet, Alert } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet, Alert, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { storeUser } from '../storage/userStorage';
-import { User } from '../types/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CommonActions } from '@react-navigation/native';
 
@@ -39,30 +38,41 @@ export default function RegisterScreen() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Register</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Name"
-                value={name}
-                onChangeText={setName}
-                autoCapitalize="words"
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-                autoCapitalize="none"
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-            />
-            <Button title="Register" onPress={register} />
-            <Button title="Back to Login" onPress={() => navigation.navigate('Login')} />
+            <ImageBackground
+                source={require('../loginwall.jpg')}
+                style={styles.background}
+                resizeMode="cover"
+                blurRadius={2}
+            >
+                <Text style={styles.title}>Register</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Name"
+                    value={name}
+                    onChangeText={setName}
+                    autoCapitalize="words"
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    value={email}
+                    onChangeText={setEmail}
+                    autoCapitalize="none"
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry
+                />
+                <View style={styles.btn}>
+                    <Button title="Register" onPress={register} />
+                </View>
+                <View style={styles.btn}>
+                    <Button title="Back to Login" onPress={() => navigation.navigate('Login')} />
+                </View>
+            </ImageBackground>
         </View>
     );
 }
@@ -71,7 +81,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        padding: 16,
+        // padding: 16,
+    },
+    background: {
+        flex: 1,
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
     },
     title: {
         fontSize: 24,
@@ -80,11 +96,20 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     input: {
+        width: '90%',
+        alignSelf: 'center',
         height: 40,
-        borderColor: 'gray',
+        borderColor: 'white',
         borderWidth: 1,
         marginBottom: 12,
         paddingHorizontal: 8,
+        borderRadius: 6,
+        backgroundColor: 'white',
+    },
+    btn: {
+        margin: 8,
+        width: '90%',
+        alignSelf: 'center',
         borderRadius: 6,
     },
 });
