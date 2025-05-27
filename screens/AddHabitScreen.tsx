@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Text, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Text, ActivityIndicator, TouchableOpacity, Alert, ImageBackground } from 'react-native';
 import { getHabits, saveHabits } from '../services/habitService';
 import { Habit } from '../types/types';
 import { v4 as uuidv4 } from 'uuid';
@@ -36,41 +36,51 @@ const AddHabitScreen = ({ navigation }: any) => {
         }
     };
     return (
+
         <View style={styles.container}>
-            <Text style={styles.title}>Add Habit</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Habit Name"
-                value={name}
-                onChangeText={setName}
-            />
-            <View style={styles.frequencyRow}>
-                {['daily', 'weekly'].map((freq) => (
-                    <TouchableOpacity
-                        key={freq}
-                        onPress={() => setFrequency(freq as 'daily' | 'weekly')}
-                        style={[
-                            styles.frequencyButton,
-                            frequency === freq && styles.frequencyButtonActive,
-                        ]}
-                    >
-                        <Text
+            <ImageBackground
+                source={require('../loginwall.jpg')}
+                style={styles.background}
+                resizeMode="cover"
+                blurRadius={2}
+            >
+                <Text style={styles.title}>Add Habit</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Habit Name"
+                    value={name}
+                    onChangeText={setName}
+                />
+                <View style={styles.frequencyRow}>
+                    {['daily', 'weekly'].map((freq) => (
+                        <TouchableOpacity
+                            key={freq}
+                            onPress={() => setFrequency(freq as 'daily' | 'weekly')}
                             style={[
-                                styles.frequencyButtonText,
-                                frequency === freq && styles.frequencyButtonTextActive,
+                                styles.frequencyButton,
+                                frequency === freq && styles.frequencyButtonActive,
                             ]}
                         >
-                            {freq.toUpperCase()}
-                        </Text>
-                    </TouchableOpacity>
-                ))}
-            </View>
+                            <Text
+                                style={[
+                                    styles.frequencyButtonText,
+                                    frequency === freq && styles.frequencyButtonTextActive,
+                                ]}
+                            >
+                                {freq.toUpperCase()}
+                            </Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
 
-            {loading ? (
-                <ActivityIndicator size="large" color="#4f8cff" />
-            ) : (
-                <Button title="Save Habit" onPress={handleAddHabit} />
-            )}
+                {loading ? (
+                    <ActivityIndicator size="large" color="#4f8cff" />
+                ) : (
+                    <View style={styles.saveHabitBtn}>
+                        <Button title="Save Habit" onPress={handleAddHabit} />
+                    </View>
+                )}
+            </ImageBackground>
         </View>
     );
 };
@@ -79,18 +89,26 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        padding: 16,
+        // padding: 16,
         backgroundColor: '#f5f6fa',
+    },
+    background: {
+        flex: 1,
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 16,
-        color: '#4f8cff',
+        color: '#fff',
         textAlign: 'center',
     },
     input: {
         height: 40,
+        width: '90%',
+        alignSelf: 'center',
         borderColor: 'gray',
         borderWidth: 1,
         marginBottom: 16,
@@ -120,6 +138,13 @@ const styles = StyleSheet.create({
     },
     frequencyButtonTextActive: {
         color: '#fff',
+    },
+    saveHabitBtn: {
+        marginTop: 10,
+        backgroundColor: '#4f8cff',
+        borderRadius: 8,
+        width: '90%',
+        alignSelf: 'center',
     },
 });
 

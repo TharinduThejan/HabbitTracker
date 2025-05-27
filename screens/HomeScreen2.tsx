@@ -112,8 +112,10 @@ const styles = StyleSheet.create({
     header: {
         padding: 30,
         backgroundColor: '#4f8cff',
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
+        // borderBottomLeftRadius: 20,
+        // borderTopRightRadius: 20,
+        // borderTopLeftRadius: 20,
+        // // borderBottomRightRadius: 20,
     },
     title: {
         fontSize: 24,

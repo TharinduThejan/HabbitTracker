@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground } from 'react-native';
 import { getHabits } from '../services/habitService';
 
 const ProgressScreen = () => {
@@ -19,13 +19,20 @@ const ProgressScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Progress</Text>
-            <View style={styles.progressCircleContainer}>
-                <View style={styles.progressCircle}>
-                    <Text style={styles.progressCircleText}>{percent}%</Text>
+            <ImageBackground
+                source={require('../loginwall.jpg')}
+                style={styles.background}
+                resizeMode="cover"
+                blurRadius={2}
+            >
+                <Text style={styles.title}>Progress</Text>
+                <View style={styles.progressCircleContainer}>
+                    <View style={styles.progressCircle}>
+                        <Text style={styles.progressCircleText}>{percent}%</Text>
+                    </View>
                 </View>
-            </View>
-            <Text style={styles.progressText}>Today's Completion Rate: {percent}%</Text>
+                <Text style={styles.progressText}>Today's Completion Rate: {percent}%</Text>
+            </ImageBackground>
         </View>
     );
 };
@@ -35,15 +42,22 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 16,
+        // padding: 16,
         backgroundColor: '#f5f6fa',
     },
     title: {
         fontSize: 28,
         fontWeight: 'bold',
         marginBottom: 32,
-        color: '#4f8cff',
+        color: '#fff',
         letterSpacing: 1,
+    },
+    background: {
+        flex: 1,
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     progressCircleContainer: {
         alignItems: 'center',
