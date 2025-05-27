@@ -7,6 +7,7 @@ import {
     Alert,
     TouchableOpacity,
     SafeAreaView,
+    ImageBackground
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { getHabits, saveHabits } from '../services/habitService';
@@ -46,6 +47,7 @@ export default function HomeScreen({ setIsLoggedIn }: { setIsLoggedIn: (value: b
     };
 
     return (
+
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>🌱 Habit Tracker</Text>
@@ -61,37 +63,43 @@ export default function HomeScreen({ setIsLoggedIn }: { setIsLoggedIn: (value: b
                     </TouchableOpacity>
                 </View>
             </View>
+            <ImageBackground
+                source={require('../loginwall.jpg')}
+                style={styles.background}
+                resizeMode="cover"
+                blurRadius={2}
+            >
+                <FlatList
+                    data={habits}
+                    keyExtractor={(item) => item.id}
+                    contentContainerStyle={styles.habitList}
+                    ListEmptyComponent={
+                        <Text style={styles.emptyText}>No habits yet. Add one to get started!</Text>
+                    }
+                    renderItem={({ item }) => {
+                        const today = new Date().toISOString().split('T')[0];
+                        const done = item.completion?.[today];
 
-            <FlatList
-                data={habits}
-                keyExtractor={(item) => item.id}
-                contentContainerStyle={styles.habitList}
-                ListEmptyComponent={
-                    <Text style={styles.emptyText}>No habits yet. Add one to get started!</Text>
-                }
-                renderItem={({ item }) => {
-                    const today = new Date().toISOString().split('T')[0];
-                    const done = item.completion?.[today];
-
-                    return (
-                        <View style={styles.card}>
-                            <Text style={styles.habitName}>{item.name}</Text>
-                            <Text style={styles.habitFrequency}>Frequency: {item.frequency.toUpperCase()}</Text>
-                            <Text style={[styles.habitStatus, { color: done ? '#4CAF50' : '#E53935' }]}>
-                                {done ? '✅ Completed Today' : '❌ Not Done Yet'}
-                            </Text>
-                            {!done && (
-                                <TouchableOpacity
-                                    style={styles.completeButton}
-                                    onPress={() => markComplete(item.id)}
-                                >
-                                    <Text style={styles.completeButtonText}>Mark Complete</Text>
-                                </TouchableOpacity>
-                            )}
-                        </View>
-                    );
-                }}
-            />
+                        return (
+                            <View style={styles.card}>
+                                <Text style={styles.habitName}>{item.name}</Text>
+                                <Text style={styles.habitFrequency}>Frequency: {item.frequency.toUpperCase()}</Text>
+                                <Text style={[styles.habitStatus, { color: done ? '#4CAF50' : '#E53935' }]}>
+                                    {done ? '✅ Completed Today' : '❌ Not Done Yet'}
+                                </Text>
+                                {!done && (
+                                    <TouchableOpacity
+                                        style={styles.completeButton}
+                                        onPress={() => markComplete(item.id)}
+                                    >
+                                        <Text style={styles.completeButtonText}>Mark Complete</Text>
+                                    </TouchableOpacity>
+                                )}
+                            </View>
+                        );
+                    }}
+                />
+            </ImageBackground>
         </SafeAreaView>
     );
 }
@@ -102,7 +110,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#F0F4F8',
     },
     header: {
-        padding: 16,
+        padding: 30,
         backgroundColor: '#4f8cff',
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
@@ -118,6 +126,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     headerButton: {
+
         backgroundColor: '#fff',
         paddingHorizontal: 12,
         paddingVertical: 6,
@@ -125,11 +134,21 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     headerButtonText: {
+        padding: 8,
+        fontSize: 16,
         color: '#4f8cff',
         fontWeight: '600',
     },
     habitList: {
         padding: 16,
+    },
+    background: {
+        flex: 1,
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20,
     },
     card: {
         backgroundColor: '#fff',
