@@ -1,50 +1,32 @@
-import { User } from '../types';
-import { storeUser, loadUser, clearUserStorage } from '../storage/userStorage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const saveUser = async (user: User): Promise<void> => {
+const USER_KEY = 'user';
+
+export const saveUser = async (user: { email: string; password: string }) => {
     try {
-        await storeUser(user);
+        await AsyncStorage.setItem(USER_KEY, JSON.stringify(user));
     } catch (error) {
         console.error('Error saving user:', error);
         throw error;
     }
 };
 
-export const getUser = async (): Promise<User | null> => {
-    try {
-        return await loadUser();
-    } catch (error) {
-        console.error('Error loading user:', error);
-        return null;
-    }
+export const getUser = async () => {
+    const data = await AsyncStorage.getItem(USER_KEY);
+    return data ? JSON.parse(data) : null;
 };
 
-export const deleteUser = async (): Promise<void> => {
+export const clearUser = async () => {
     try {
-        await clearUserStorage();
+        await AsyncStorage.removeItem(USER_KEY);
     } catch (error) {
-        console.error('Error clearing user storage:', error);
+        console.error('Error clearing user:', error);
     }
 };
-export const updateUser = async (user: User): Promise<void> => {
+export const LogoutUser = async () => {
     try {
-        const existingUser = await loadUser();
-        if (existingUser) {
-            const updatedUser = { ...existingUser, ...user };
-            await storeUser(updatedUser);
-        } else {
-            console.warn('No user found to update.');
-        }
-    } catch (error) {
-        console.error('Error updating user:', error);
-        throw error;
-    }
-};
-export const logoutUser = async (): Promise<void> => {
-    try {
-        await clearUserStorage();
+        await AsyncStorage.removeItem(USER_KEY);
     } catch (error) {
         console.error('Error logging out user:', error);
-        throw error;
     }
 };

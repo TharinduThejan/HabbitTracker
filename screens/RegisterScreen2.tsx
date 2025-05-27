@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
-import { saveUser } from '../services/userService';
+import { View, TextInput, Button, Text, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Alert } from 'react-native';
+import { storeUser } from '../storage/userStorage';
+import { User } from '../types/types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function RegisterScreen() {
     const navigation = useNavigation<any>();
@@ -14,7 +16,12 @@ export default function RegisterScreen() {
         if (name && email && password) {
             try {
                 const user = { id: Date.now().toString(), name, email, password };
-                await saveUser(user); navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+                console.log('Saving user:', user);
+                await storeUser(user);
+                const savedData = await AsyncStorage.getItem('user');
+                console.log('Data in AsyncStorage:', savedData);
+                console.log('User saved:', user);
+                navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
             } catch (error) {
                 Alert.alert('Registration error', 'An error occurred during registration.');
             }
@@ -32,13 +39,14 @@ export default function RegisterScreen() {
                 placeholder="Name"
                 value={name}
                 onChangeText={setName}
+                autoCapitalize="words"
             />
-
             <TextInput
                 style={styles.input}
                 placeholder="Email"
                 value={email}
                 onChangeText={setEmail}
+                autoCapitalize="none"
             />
             <TextInput
                 style={styles.input}
@@ -52,6 +60,7 @@ export default function RegisterScreen() {
         </View>
     );
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -62,6 +71,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 16,
+        textAlign: 'center',
     },
     input: {
         height: 40,
@@ -69,10 +79,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 12,
         paddingHorizontal: 8,
+        borderRadius: 6,
     },
 });
-
-
-
-
-

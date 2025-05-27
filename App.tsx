@@ -1,32 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { ActivityIndicator, View } from 'react-native';
+
 import { getUser } from './services/userService';
-import LoginScreen from './screens/LoginScreen';
-import RegisterScreen from './screens/RegisterScreen';
-import HomeScreen from './screens/HomeScreen';
+import LoginScreen from './screens/LoginScreen2';
+import RegisterScreen from './screens/RegisterScreen2';
+import HomeScreen from './screens/HomeScreen2';
+import AddHabitScreen from './screens/AddHabitScreen';
+import ProgressScreen from './screens/ProgressScreen';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
-  const [initialRoute, setInitialRoute] = useState<'Login' | 'Home'>('Login');
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const checkUser = async () => {
+    const checkLogin = async () => {
       const user = await getUser();
-      if (user) {
-        setInitialRoute('Home');
-      }
+      setIsLoggedIn(!!user); // convert to boolean
     };
-    checkUser();
+    checkLogin();
   }, []);
+
+  if (isLoggedIn === null) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {isLoggedIn ? (
+          <>
+            <Stack.Screen name="Home">
+              {(props) => <HomeScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
+            </Stack.Screen>
+            <Stack.Screen name="AddHabit" component={AddHabitScreen} />
+            <Stack.Screen name="Progress" component={ProgressScreen} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="Login">
+              {(props) => <LoginScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
+            </Stack.Screen>
+            <Stack.Screen name="Register" component={RegisterScreen} />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Habit } from '../types';
+import { Habit } from '../types/types';
 
 const HABIT_KEY = 'habit';
 

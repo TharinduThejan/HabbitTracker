@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { User } from '../types';
+import { User } from '../types/types';
 
-const USER_KEY = "user";
+const USER_KEY = 'user';
 
 export const storeUser = async (user: User): Promise<void> => {
     await AsyncStorage.setItem(USER_KEY, JSON.stringify(user));
@@ -12,6 +12,6 @@ export const loadUser = async (): Promise<User | null> => {
     return data ? JSON.parse(data) : null;
 };
 
-export const clearUserStorage = async (): Promise<void> => {
+export const logoutUser = async () => {
     await AsyncStorage.removeItem(USER_KEY);
 };

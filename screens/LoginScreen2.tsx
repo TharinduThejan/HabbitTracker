@@ -1,36 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, Alert, ImageBackground } from 'react-native';
-import { getUser } from '../services/userService';
 import { useNavigation } from '@react-navigation/native';
 import { loadUser } from '../storage/userStorage';
 
-
-
-export default function LoginScreen() {
+export default function LoginScreen({ setIsLoggedIn }: { setIsLoggedIn: (value: boolean) => void }) {
     const navigation = useNavigation<any>();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    useEffect(() => {
-        const checkLogin = async () => {
-            const data = await loadUser();
-            if (data) {
-                navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
-            }
-        };
-        checkLogin();
-    }, [navigation]);
-
     const login = async () => {
         try {
-            const data = await getUser();
-            console.log('Stored user:', data);
-            if (data && data.email === email && data.password === password) {
-                navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+            const storedUser = await loadUser();
+
+            console.log('Stored user:', storedUser);
+            console.log('Entered email:', email);
+            console.log('Entered password:', password);
+
+            if (
+                storedUser &&
+                storedUser.email.toLowerCase() === email.trim().toLowerCase() &&
+                storedUser.password === password.trim()
+            ) {
+                setIsLoggedIn(true); // This will cause App.tsx to render the Home stack
             } else {
+                console.log('Showing invalid credentials alert');
                 Alert.alert('Invalid credentials');
             }
         } catch (error) {
+            console.error('Login error:', error);
             Alert.alert('Login error', 'An error occurred during login.');
         }
     };
@@ -44,15 +41,13 @@ export default function LoginScreen() {
         >
             <View style={styles.container}>
                 <Text style={styles.title}>Login</Text>
-                <Text style={styles.inputTitle}>Email</Text>
                 <TextInput
                     style={styles.input}
                     placeholder="Email"
                     value={email}
                     onChangeText={setEmail}
+                    autoCapitalize="none"
                 />
-                <Text style={styles.inputTitle}>Password</Text>
-
                 <TextInput
                     style={styles.input}
                     placeholder="Password"
@@ -70,6 +65,7 @@ export default function LoginScreen() {
         </ImageBackground>
     );
 }
+
 const styles = StyleSheet.create({
     background: {
         flex: 1,
@@ -86,11 +82,8 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "bold",
         marginBottom: 16,
-    },
-    inputTitle: {
-        fontSize: 16,
-        marginBottom: 8,
-        color: "#333",
+        color: '#fff',
+        textAlign: 'center',
     },
     input: {
         height: 40,
@@ -98,9 +91,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 12,
         paddingHorizontal: 8,
+        backgroundColor: 'white',
+        borderRadius: 6,
     },
     button: {
-        margin: 10,
+        marginVertical: 8,
     },
 });
-
